@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <title>Inglizcha-O‘zbekcha So‘zlar</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
+    h1 { color: #333; }
+    input { padding: 10px; width: 100%; margin-bottom: 20px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 10px; border: 1px solid #ccc; text-align: left; }
+    tr:nth-child(even) { background: #f1f1f1; }
+  </style>
+</head>
+<body>
+  <h1>Inglizcha-O‘zbekcha so‘zlar</h1>
+  <input type="text" id="search" placeholder="So‘z қидиринг...">
+
+  <table>
+    <thead>
+      <tr><th>English</th><th>O‘zbek</th></tr>
+    </thead>
+    <tbody id="wordList"></tbody>
+  </table>
+
+  <script>
+    async function loadWords() {
+      const response = await fetch('so\'zlar.json'); // GitHub fayl nomiga mos yozинг
+      const words = await response.json();
+      const tbody = document.getElementById('wordList');
+      const searchInput = document.getElementById('search');
+
+      function renderList(filter = "") {
+        tbody.innerHTML = "";
+        words
+          .filter(w => w.english.toLowerCase().includes(filter.toLowerCase()) || w.uzbek.toLowerCase().includes(filter.toLowerCase()))
+          .forEach(w => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${w.english}</td><td>${w.uzbek}</td>`;
+            tbody.appendChild(row);
+          });
+      }
+
+      searchInput.addEventListener('input', () => {
+        renderList(searchInput.value);
+      });
+
+      renderList();
+    }
+
+    loadWords();
+  </script>
+</body>
+</html>
